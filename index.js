@@ -37,10 +37,10 @@ app.get("/", (req, res) => {
 app.use("/uploads", express.static("uploads"));
 
 // use routers (หลัง connect)
-app.use("/users", userRouter);
-app.use("/cats", catRouter);
-app.use("/services", serviceRouter);
-app.use("/bookings", bookingRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/cats", catRouter);
+app.use("/api/v1/services", serviceRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 app.listen(PORT, () => {
   console.log("Server is running on http://localhost:" + PORT);
