@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 app.use("/uploads", express.static("uploads"));
 
 // use routers (หลัง connect)
-app.use("users", userRouter);
+app.use("api/v1/users", userRouter);
 app.use("/api/v1/cats", catRouter);
 app.use("/api/v1/services", serviceRouter);
 app.use("/api/v1/bookings", bookingRouter);
