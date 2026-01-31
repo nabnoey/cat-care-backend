@@ -2,12 +2,10 @@ import mongoose from "mongoose";
 
 const serviceSchema = new mongoose.Schema({
   name: { type: String, required: true },   // อาบน้ำ–ตัดขน
+  description: { type: String },
   price: { type: Number, required: true },
-  type: {
-    type: String,
-    enum: ["grooming", "hotel"],
-    required: true
-  }
+  imageUrl: { type: String },
+  type: { type: String } 
 }, { timestamps: true });
 
 export default mongoose.model("Service", serviceSchema);

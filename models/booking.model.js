@@ -21,9 +21,10 @@ const bookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "confirmed", "done"],
+    enum: ["pending", "confirmed", "rejected", "cancelled", "done"],
     default: "pending"
-  }
+  },
+  adminMessage: { type: String } // ข้อความจาก Admin (เหตุผลที่ปฏิเสธ )
 }, { timestamps: true });
 
 export default mongoose.model("Booking", bookingSchema);

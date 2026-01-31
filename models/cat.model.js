@@ -5,7 +5,9 @@ const catSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  age: Number,
+  ageYears: { type: Number, default: 0 },
+  ageMonths: { type: Number, default: 0 },
+  imageUrl: { type: String },
   services: [
     {
       type: String,
@@ -20,4 +22,4 @@ const catSchema = new mongoose.Schema({
 
 const Cat = mongoose.model("Cat", catSchema);
 
-export default Cat; // 👈 สำคัญมาก
+export default Cat; 

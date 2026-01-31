@@ -8,10 +8,14 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // register
 const register = async (req, res) => {
-  const { username, email,password } = req.body; // ❌ ไม่รับ role
+  const { username, email, password, confirmPassword, phoneNumber } = req.body;
 
-  if (!username || !email|| !password) {
+  if (!username || !email || !password || !confirmPassword) {
     return res.status(400).send({ message: "กรุณากรอกข้อมูลให้ครบ" });
+  }
+
+  if (password !== confirmPassword) {
+    return res.status(400).send({ message: "รหัสผ่านกับการยืนยันรหัสผ่านไม่ตรงกัน" });
   }
 
   try {
@@ -27,6 +31,7 @@ const register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      phoneNumber,
       role: "customer", // ✅ fix role ฝั่ง backend
     });
 
@@ -74,6 +79,7 @@ const login = async (req, res) => {
             id: user._id,
             username: user.username,
             email: user.email,  
+            phoneNumber: user.phoneNumber,
             role: user.role,
             accessToken: token,
           },
@@ -85,7 +91,54 @@ const login = async (req, res) => {
   }
 };
 
+// ✅ ฟังก์ชันสำหรับสร้าง Admin (ยิง API นี้เพื่อสร้าง Admin)
+const createAdmin = async (req, res) => {
+  const { username, email, password, confirmPassword } = req.body;
+
+  if (!username || !email || !password || !confirmPassword) {
+    return res.status(400).send({ message: "กรุณากรอกข้อมูลให้ครบ" });
+  }
+
+  if (password !== confirmPassword) {
+    return res.status(400).send({ message: "รหัสผ่านกับการยืนยันรหัสผ่านไม่ตรงกัน" });
+  }
+
+  try {
+    const existingUser = await UserModel.findOne({ username });
+    if (existingUser) {
+      return res.status(400).send({ message: "มีชื่อผู้ใช้นี้ในระบบแล้ว" });
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    await UserModel.create({
+      username,
+      email,
+      password: hashedPassword,
+      role: "admin", // 👈 กำหนดเป็น admin
+    });
+
+    res.send({ message: "สร้างบัญชี Admin สำเร็จ" });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+};
+
+// ✅ ดึงข้อมูลโปรไฟล์ของตัวเอง (Get Me)
+const getProfile = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).send({ message: "ไม่พบผู้ใช้งาน" });
+    res.send(user);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+};
+
 export default {
   register,
   login,
+  createAdmin,
+  getProfile,
 };
