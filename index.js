@@ -14,7 +14,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-   origin: [process.env.BASE_URL, "https://cat-care-frontend.vercel.app/api/v1", "http://localhost:5173"],
+   origin: "https://cat-care-frontend-4amraun2s-nabnoeys-projects.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
    allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
