@@ -1,30 +1,36 @@
 import Cat from "../models/cat.model.js";
 
 export const createCat = async (req, res) => {
-  const { name, ageYears, ageMonths } = req.body;
+  try {
+    const { name, ageYears, ageMonths } = req.body;
 
-  if (!name) {
-    return res.status(400).send({ message: "กรุณาระบุชื่อแมว" });
+    if (!name) {
+      return res.status(400).send({ message: "กรุณาระบุชื่อแมว" });
+    }
+
+    const imageUrl = req.file ? req.file.supabaseUrl : null;
+
+    const cat = await Cat.create({
+      name,
+      ageYears: ageYears || 0,
+      ageMonths: ageMonths || 0,
+      imageUrl,
+      owner: req.user.id,
+    });
+
+    res.send(cat);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
-
-  const imageUrl = req.file
-    ? req.file.supabaseUrl
-    : null;
-
-  const cat = await Cat.create({
-    name,
-    ageYears: ageYears || 0,
-    ageMonths: ageMonths || 0,
-    imageUrl,
-    owner: req.user.id,
-  });
-
-  res.send(cat);
 };
 
 export const getCats = async (req, res) => {
-  const cats = await Cat.find({ owner: req.user.id });
-  res.send(cats);
+  try {
+    const cats = await Cat.find({ owner: req.user.id });
+    res.send(cats);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
 };
 
 // ✅ Get Single Cat
