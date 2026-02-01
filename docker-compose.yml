@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: cat_care_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: cat_care_booking
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://localhost:27017/cat_care_booking", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo_data:
