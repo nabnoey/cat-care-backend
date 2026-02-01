@@ -9,7 +9,7 @@ import {
 } from "../controllers/service.controller.js";
 
 import { upload, uploadToSupabase } from "../middlewares/supabase.middleware.js";
-import { auth } from "../middlewares/auth.middleware.js";
+import auth from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
