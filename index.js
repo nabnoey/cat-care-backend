@@ -10,20 +10,28 @@ import bookingRouter from "./routers/booking.router.js";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
-const BASE_URL = process.env.BASE_URL ;
 
 
 const app = express();
 
 app.use(express.json());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://cat-care-frontend.vercel.app",
+];
+
 app.use(cors({
-
-   origin: BASE_URL,
-
-  methods: ["GET", "POST", "PUT", "DELETE"],
-   allowedHeaders: ["Content-Type", "Authorization"],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
+
+app.options("*", cors());
 
 
 mongoose
