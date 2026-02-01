@@ -9,13 +9,17 @@ import bookingRouter from "./routers/booking.router.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
+
 const BASE_URL = process.env.VITE_BASE_URL || "http://localhost:5173";
+
 
 const app = express();
 
 app.use(express.json());
 app.use(cors({
+
    origin: BASE_URL,
+
   methods: ["GET", "POST", "PUT", "DELETE"],
    allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
