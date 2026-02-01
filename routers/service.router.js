@@ -1,14 +1,38 @@
 import express from "express";
-import { getServices, createService, seedServices, getServiceById, updateService, deleteService } from "../controllers/service.controller.js";
-import authMiddleware from "../middlewares/auth.middleware.js";
+import {
+  getServices,
+  createService,
+  getServiceById,
+  updateService,
+  deleteService,
+  seedServices,
+} from "../controllers/service.controller.js";
+
+import { upload, uploadToSupabase } from "../middleware/upload.middleware.js";
+import auth from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.get("/list", getServices);
-router.post("/add", authMiddleware, createService);
-router.post("/seed", seedServices); // ไม่ต้อง login ก็ได้สำหรับ dev หรือจะใส่ authMiddleware ก็ได้
+router.get("/", getServices);
 router.get("/:id", getServiceById);
-router.put("/:id", authMiddleware, updateService);
-router.delete("/:id", authMiddleware, deleteService);
+
+router.post(
+  "/",
+  auth,
+  upload,
+  uploadToSupabase,
+  createService
+);
+
+router.put(
+  "/:id",
+  auth,
+  upload,
+  uploadToSupabase,
+  updateService
+);
+
+router.delete("/:id", auth, deleteService);
+router.post("/seed/init", seedServices);
 
 export default router;
