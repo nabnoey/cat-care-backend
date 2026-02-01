@@ -8,7 +8,7 @@ import {
   seedServices,
 } from "../controllers/service.controller.js";
 
-import { upload, uploadToSupabase } from "../middleware/upload.middleware.js";
+import { upload, uploadToSupabase } from "../middleware/supabase.middleware.js";
 import auth from "../middleware/auth.middleware.js";
 
 const router = express.Router();
